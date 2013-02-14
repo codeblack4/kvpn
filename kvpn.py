@@ -1,24 +1,27 @@
-
 #!/usr/bin/python
 
 
 #: This is a gui attempt for vpnc client under Linux :#
 
 import wx
+import os
 
 class MyFrame(wx.Frame):
     
     def __init__(self,parent,title):
         super(MyFrame,self).__init__(parent,title=title,size=(300,100))
-        self.control = wx.TextCtrl(self,style=wx.TE_MULTILINE)
+       # self.control = wx.TextCtrl(self,style=wx.TE_MULTILINE)
         self.CreateStatusBar()
-
+    
 
         #: set up the menu :#
         filemenu = wx.Menu()
    
 
         openItem = filemenu.Append(wx.ID_OPEN,"&Open","Open a file")
+        user = os.getlogin()
+        self.default_dir  = '/home/'+user
+        self.default_file = ''
         filemenu.AppendSeparator()
         aboutItem = filemenu.Append(wx.ID_ABOUT,"&About","Information about kvpn")
         filemenu.AppendSeparator()
@@ -27,7 +30,7 @@ class MyFrame(wx.Frame):
 
         #: set up edit :#
         editmenu = wx.Menu()
-        prefItem = editmenu.Append(wx.ID_ABOUT,"&Preferences","Pref")
+        prefItem = editmenu.Append(wx.ID_PROPERTIES,"&Preferences","Preferences about the program")
 
         #: Create the menubar :#
         menubar = wx.MenuBar()
@@ -43,7 +46,11 @@ class MyFrame(wx.Frame):
 
     def onOpen(self,event):
 
-        f = open(
+        dialog = wx.FileDialog(self, "Choose some files...", self.default_dir, self.default_file,"python files|*.py|all files|*", wx.FD_OPEN|wx.FD_MULTIPLE)
+        if dialog.ShowModal() == wx.ID_OK:
+            dialog.ShowModal()
+            paths = dialog.GetPaths()
+        dialog.Destroy()
 
 
 
@@ -59,3 +66,4 @@ class MyFrame(wx.Frame):
 gui = wx.App(False)
 frame =MyFrame(None,'Kvpn')
 gui.MainLoop()
+
